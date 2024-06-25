@@ -19,7 +19,7 @@ Additionally, staff can manage unpaid orders by viewing the list of unpaid order
 By incorporating these functionalities, the restaurant ordering system aims to streamline the ordering process for customers and facilitate efficient order management for restaurant staff.
 
 ## Architecture Diagram
-![Architecture Diagram for Restaurant Ordering System](images/Architecture Design.drawio.png)
+![Architecture Diagram for Restaurant Ordering System](images/Architecture_Design.drawio.png)
 
 ## List of URL end points middleware RESTful
 1. https://hushed-charming-clipper.glitch.me/customer
@@ -43,4 +43,10 @@ By incorporating these functionalities, the restaurant ordering system aims to s
 ### ERD
 ![ERD for Restaurant Ordering System](images/Food_Ordering_ERD.drawio.png)
 
-
+### Data Dictionary Table
+![Customer](images/Customer.png)
+![Staff](images/Staff.png)
+![Customer_Order](images/Customer_Order.png)
+![Meal](images/Meal.png)
+![Order_Meal](images/Order_Meal.png)
+![Payment](images/Payment.png)
