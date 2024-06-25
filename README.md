@@ -22,13 +22,13 @@ By incorporating these functionalities, the restaurant ordering system aims to s
 ![Architecture Diagram for Restaurant Ordering System](images/Architecture Design.drawio.png)
 
 ## List of URL end points middleware RESTful
-https://hushed-charming-clipper.glitch.me/customer
-https://hushed-charming-clipper.glitch.me/staff
-https://hushed-charming-clipper.glitch.me/customer_order
-https://hushed-charming-clipper.glitch.me/customer_order/personal
-https://hushed-charming-clipper.glitch.me/meal
-https://hushed-charming-clipper.glitch.me/order_meal
-https://hushed-charming-clipper.glitch.me/payment
+1. https://hushed-charming-clipper.glitch.me/customer
+2. https://hushed-charming-clipper.glitch.me/staff
+3. https://hushed-charming-clipper.glitch.me/customer_order
+4. https://hushed-charming-clipper.glitch.me/customer_order/personal
+5. https://hushed-charming-clipper.glitch.me/meal
+6. https://hushed-charming-clipper.glitch.me/order_meal
+7. https://hushed-charming-clipper.glitch.me/payment
 
 ## Functions/Features in the middleware
 1. Read customer and staff from database to authenticate the logged in user.
@@ -42,3 +42,5 @@ https://hushed-charming-clipper.glitch.me/payment
 ## The database and tables involve in the projects
 ### ERD
 ![ERD for Restaurant Ordering System](images/Food_Ordering_ERD.drawio.png)
+
+
