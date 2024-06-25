@@ -17,3 +17,28 @@ Staff have the capability to change the status of an order as required. They can
 Additionally, staff can manage unpaid orders by viewing the list of unpaid orders and confirming payments. They can change the status of an order to indicate whether it is pending, in progress, completed, or canceled.
 
 By incorporating these functionalities, the restaurant ordering system aims to streamline the ordering process for customers and facilitate efficient order management for restaurant staff.
+
+## Architecture Diagram
+![Architecture Diagram for Restaurant Ordering System](images/Architecture Design.drawio.png)
+
+## List of URL end points middleware RESTful
+https://hushed-charming-clipper.glitch.me/customer
+https://hushed-charming-clipper.glitch.me/staff
+https://hushed-charming-clipper.glitch.me/customer_order
+https://hushed-charming-clipper.glitch.me/customer_order/personal
+https://hushed-charming-clipper.glitch.me/meal
+https://hushed-charming-clipper.glitch.me/order_meal
+https://hushed-charming-clipper.glitch.me/payment
+
+## Functions/Features in the middleware
+1. Read customer and staff from database to authenticate the logged in user.
+2. Read customer orders from database base on ordering status or customer id.
+3. Add new customer orders and order meals to database.
+4. Update customer orders status in database base on order id.
+5. Delete customer orders and order meals from database base on order id.
+6. Read meals from database base on meal type.
+7. Add and delete payment to database base on order id.
+
+## The database and tables involve in the projects
+### ERD
+![ERD for Restaurant Ordering System](images/Food_Ordering_ERD.drawio.png)
