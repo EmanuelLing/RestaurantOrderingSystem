@@ -11,16 +11,43 @@ customerOrderRouter.use(express.urlencoded({ extended: true }));
 // request customer order details
 // response message
 customerOrderRouter.post('/', (req, res) => {
-  const {OrderID, OrderDateTime, OrderType, TableNo, Status, TotalPrice, CustomerID} = req.body;
+  
+  const {OrderDateTime, OrderType, TableNo, Status, TotalPrice, CustomerID} = req.body;
 
-  const query = `INSERT INTO customer_order 
-  (OrderID, OrderDateTime, OrderType, TableNo, Status, TotalPrice, CustomerID) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  let OrderID;
 
-  db.query(query, [OrderID, OrderDateTime, OrderType, TableNo || null, Status, TotalPrice, CustomerID], (error, results) => {
+
+  // Generate a new order id
+  // Get the latest customer order
+  db.query("SELECT * FROM customer_order ORDER BY OrderID DESC LIMIT 1", (error, results) => {
     if (error) {
-      return res.status(500).send({error: 'Database error'});
+      return res.status(500).send({error: "Database error"});
+      }
+    // if there is a customer order
+    if (results.length > 0) {
+      // get the order id of the customer order
+      const lastId = results[0].OrderID;
+      // get the numeric part from the order id
+      const numericPart = parseInt(lastId.substring(1));
+      // generate a new order id by adding 1 onto the numeric part
+      OrderID = 'O' + String(numericPart + 1).padStart(5, '0');
+    } else { // if there is no a customer order
+      // create the first order id
+      OrderID = 'O00001';
     }
-    res.status(201).send({"message": "customer added order successfully"});
+    
+    const query = `INSERT INTO customer_order 
+    (OrderID, OrderDateTime, OrderType, TableNo, Status, TotalPrice, CustomerID) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+    db.query(query, [OrderID, OrderDateTime, OrderType, TableNo || null, Status, TotalPrice, CustomerID], (error, results) => {
+      if (error) {
+      return res.status(500).send({error: "Database error"});
+      }
+      res.status(201).send({
+        message: "customer order added successfully",
+        OrderID: OrderID
+      });
+    });
   });
 });
 
