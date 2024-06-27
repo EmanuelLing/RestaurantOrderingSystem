@@ -10,20 +10,31 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import foodorderingsystem.CallingAPI;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
+import javax.swing.JButton;
+
 
 public class Payment extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField OrderStatusTextField;
-	private static String previewOrder;
-
+    private CallingAPI api = new CallingAPI(); // Instantiate CallingAPI
+    private String PaymentType;
 	/**
 	 * Launch the application.
 	 */
@@ -31,8 +42,9 @@ public class Payment extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Payment frame = new Payment(previewOrder);
+					Payment frame = new Payment("","",new ArrayList<>(),"",0.0);
 					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -43,7 +55,7 @@ public class Payment extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Payment(String previewOrder) {
+	public Payment(String previewOrder, String customerID,ArrayList<FoodMenu> orderItems,String orderID,double grandTotal) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 559, 552);
 		contentPane = new JPanel();
@@ -70,50 +82,18 @@ public class Payment extends JFrame {
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
-		JComboBox<String> comboBox = new JComboBox<>();
-		comboBox.addActionListener(new ActionListener() {
+		JButton btnComfirmPayment = new JButton("Comfirm Payment");
+		btnComfirmPayment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				String selectedOption = (String) comboBox.getSelectedItem();
-		        if ("Cash".equals(selectedOption)) {
-		        	OrderStatusTextField.setText("UnPaid");
-		        }
+				addPayment(customerID,orderItems,PaymentType,orderID,grandTotal);
+				HomePage homepage = new HomePage(customerID);
+                homepage.setVisible(true);
+                dispose(); // close login frame
 			}
 		});
-		comboBox.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Cash", "e-Wallet", "Online Banking"}));
-		comboBox.setBounds(157, 44, 135, 21);
-		panel_1.add(comboBox);
-		
-		JLabel lblNewLabel_1 = new JLabel("Payment Method:");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1.setBounds(26, 48, 111, 13);
-		panel_1.add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_1_1 = new JLabel("Order Status:");
-		lblNewLabel_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1_1.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1_1.setBounds(39, 78, 98, 13);
-		panel_1.add(lblNewLabel_1_1);
-		
-		OrderStatusTextField = new JTextField();
-		OrderStatusTextField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(OrderStatusTextField.getText()== "Completed") 
-				{
-					JOptionPane.showMessageDialog(null," Your order is Completed");
-				}else {
-					JOptionPane.showMessageDialog(null," Your order is Canceled");
-				}
-				System.exit(0);
-					
-			}
-		});
-		OrderStatusTextField.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		OrderStatusTextField.setBounds(157, 75, 135, 19);
-		panel_1.add(OrderStatusTextField);
-		OrderStatusTextField.setColumns(10);
+		btnComfirmPayment.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnComfirmPayment.setBounds(77, 52, 163, 21);
+		panel_1.add(btnComfirmPayment);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new LineBorder(Color.DARK_GRAY, 2));
@@ -129,5 +109,40 @@ public class Payment extends JFrame {
 		panel_2.add(lblNewLabel);
 		
 		PreviewReceiptTextArea.setText(previewOrder);
+	}
+	
+	private void addPayment(String customerID,ArrayList<FoodMenu> orderItems,String PaymentType,String orderID, double grandTotal)
+	{
+		try {
+		String currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		String total = String.valueOf(grandTotal);
+		 // Extract the number part from OrderID
+	    String numberPart = orderID.replaceAll("\\D+", "");
+	    
+	    // Create PaymentID starting with 'P' and appending the extracted number
+	    String paymentID = "P" + numberPart;
+	    
+	    System.out.println(paymentID);
+	    System.out.println(total);
+	    System.out.println(currentTime);
+	    System.out.println(orderID);
+	    System.out.println(PaymentType);
+	    
+		
+		api.addPaymentAPI(paymentID, total, currentTime, PaymentType, orderID, null);
+		
+		JSONObject response = api.getJsonResponse();
+        if (response != null && response.has("message") && response.getString("message").equals("payment successfully added")) {
+            JOptionPane.showMessageDialog(null, "Payment added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+            else {
+            JOptionPane.showMessageDialog(null, "Failed to add payment.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+		
 	}
 }

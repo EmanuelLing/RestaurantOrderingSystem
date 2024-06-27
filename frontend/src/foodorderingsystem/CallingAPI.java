@@ -25,14 +25,14 @@ public class CallingAPI {
     public static void main (String[] args) {
 		//new CallingAPI().readCustomerAPI("Angelina", "pass789");
 		//new CallingAPI().readStaffAPI("Vincent Tan", "staff123");
-		//new CallingAPI().addCustomerOrderAPI("O00001", "2024-06-22 11:06:30", "eat in", "12", "Pending", "13.40", "C00002");
+		//new CallingAPI().addCustomerOrderAPI("2024-06-22 11:06:30", "eat in", "12", "Pending", "13.40", "C00002");
 		//new CallingAPI().readCustomerOrderAPI("Pending");
     	//new CallingAPI().readPersonalCustomerOrder("C00001");
 		//new CallingAPI().updateCustomerOrderAPI("O00002", "In progress", "S00001");
 		//new CallingAPI().deleteCustomerOrderAPI("O00003");
 		//new CallingAPI().readMealAPI();
 		//new CallingAPI().addOrderMealAPI("O00002", "M00001", "2");
-		//new CallingAPI().readOrderMealAPI("O00002");
+		//new CallingAPI().readOrderMealAPI("O00035");
 		//new CallingAPI().deleteOrderMealAPI("O00002");
 		//new CallingAPI().addPaymentAPI("P00001", "13.40", "2024-06-22 11:07:15", "e-wallet", "O00001", "S00002");
 		//new CallingAPI().readPaymentAPI("O00002");
@@ -120,12 +120,11 @@ public class CallingAPI {
         makeHttpRequest(url, "GET", params);
     }
     
-    public void addCustomerOrderAPI(String OrderID, String OrderDateTime, String OrderType, 
+    public void addCustomerOrderAPI(String OrderDateTime, String OrderType, 
             String TableNo, String Status, String TotalPrice, String CustomerID) {
         String url = "https://hushed-charming-clipper.glitch.me/customer_order";
         
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("OrderID", OrderID));
         params.add(new BasicNameValuePair("OrderDateTime", OrderDateTime));
         params.add(new BasicNameValuePair("OrderType", OrderType));
         params.add(new BasicNameValuePair("TableNo", TableNo));
@@ -200,7 +199,8 @@ public class CallingAPI {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("OrderID", OrderID));
 
-        makeHttpRequest(url, "GET", params);
+        //makeHttpRequest(url, "GET", params);
+        System.out.println(makeHttpRequest(url, "GET", params));
     }
 
     
