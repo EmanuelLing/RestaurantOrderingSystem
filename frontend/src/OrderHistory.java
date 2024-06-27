@@ -1,0 +1,129 @@
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import foodorderingsystem.CallingAPI;
+import javax.swing.SwingConstants;
+
+public class OrderHistory {
+
+	private JFrame frame;
+	private JTable tablePaidOrderList;
+	private CallingAPI api;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					OrderHistory window = new OrderHistory("");
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public OrderHistory(String customerID) {
+		api = new CallingAPI();
+		initialize(customerID);
+		fetchAndDisplayOrders(customerID);
+	}
+
+	public void setVisible(boolean visible) {
+		frame.setVisible(visible);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(String customerID) {
+		frame = new JFrame();
+		frame.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 13));
+		frame.setBounds(100, 100, 800, 550);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setBackground(new Color(230, 255, 255));
+		frame.getContentPane().setLayout(null);
+
+		JLabel lblOrders = new JLabel("Order History");
+		lblOrders.setHorizontalAlignment(SwingConstants.CENTER);
+		lblOrders.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lblOrders.setBounds(297, 30, 167, 29);
+		frame.getContentPane().add(lblOrders);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(51, 85, 679, 330);
+		frame.getContentPane().add(scrollPane);
+		
+
+		tablePaidOrderList = new JTable();
+		scrollPane.setViewportView(tablePaidOrderList);
+		tablePaidOrderList.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		tablePaidOrderList.setModel(new DefaultTableModel(
+			new Object[][] {},
+			new String[] {
+					"OrderID", "OrderDateTime","OrderType", "TableNo", "Status","CustomerID","StaffID","TotalPrice"
+			}
+		));
+
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+                    HomePage homepage = new HomePage(customerID);
+                    homepage.setVisible(true);
+                    frame.dispose(); 
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+			}
+		});
+		btnBack.setBounds(348, 441, 89, 23);
+		frame.getContentPane().add(btnBack);
+	}
+
+	private void fetchAndDisplayOrders(String customerID) {
+		try {
+			api.readPersonalCustomerOrder(customerID);
+			JSONObject jsonResponse = api.getJsonResponse();
+			if (jsonResponse != null) {
+				JSONArray orders = jsonResponse.getJSONArray("customer_order");
+				DefaultTableModel model = (DefaultTableModel) tablePaidOrderList.getModel();
+				for (int i = 0; i < orders.length(); i++) 
+				{
+					JSONObject order = orders.getJSONObject(i);
+	                model.addRow(new Object[]{
+	                    order.getString("OrderID"),
+	                    order.getString("OrderDateTime"),
+	                    order.getString("OrderType"),
+	                    order.getInt("TableNo"),
+	                    order.getString("Status"),
+	                    order.getString("CustomerID"),
+	                    order.optString("StaffID"), 
+	                    order.getDouble("TotalPrice")
+	                });
+				}
+			} else {
+				System.out.println("No response from the API");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
