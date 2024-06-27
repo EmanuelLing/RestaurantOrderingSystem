@@ -17,17 +17,8 @@ mealRouter.get('/', (req, res) => {
             return res.status(500).send({ error: 'Database error' });
         }
         if (results.length > 0) {
-            const jsonData = results.map(file => ({
-                MealID: file.MealID,
-                MealName: file.MealName,
-                MealType: file.MealType,
-                Price: file.Price,
-                MealImage: file.MealImage.toString('base64')
-            }));
-
-            res.status(201).send({Meals: jsonData});
-        }
-        
+            res.status(201).send({Meals: results});
+        }      
         else {
             res.status(404).send({error: 'no meal found'});
         }
