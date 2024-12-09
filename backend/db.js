@@ -1,7 +1,7 @@
 // db.js
 const mysql = require('mysql');
 
-// 创建数据库连接池
+// Create a database connection pool
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
@@ -10,5 +10,5 @@ const pool = mysql.createPool({
   multipleStatements: true
 });
 
-// 导出连接池
+// export connection pool
 module.exports = pool;
