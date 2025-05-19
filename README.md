@@ -22,6 +22,7 @@ By incorporating these functionalities, the restaurant ordering system aims to s
 ![Architecture Diagram for Restaurant Ordering System](images/Architecture_Design.drawio.png)
 
 ## List of URL end points middleware RESTful
+from https://glitch.com/
 1. https://hushed-charming-clipper.glitch.me/customer
 2. https://hushed-charming-clipper.glitch.me/staff
 3. https://hushed-charming-clipper.glitch.me/customer_order
